@@ -32,6 +32,20 @@ The **dimensions** describe who, what, where, and when. The **facts** represent 
 
 The PBIX also contains measures named `total_sales` and `total_orders`. Its two report pages include date-based tables for sales, inventory units, and targets, plus cards for total sales and total orders and a customer-region table. These visuals are useful for checking the model as it is built.
 
+## Model transformation
+
+### Before
+
+The original model had many source tables and relationships that were difficult to follow.
+
+![Power BI model before restructuring, with many source tables and relationships](before.png)
+
+### After
+
+The reorganized model separates dimensions and facts so the relationships are easier to inspect.
+
+![Power BI model after restructuring, with dimension and fact tables](after.png)
+
 ## Project workflow
 
 1. **Explored the source.** Reviewed the 23 sheets to identify keys, repeated fields, and the meaning of each row before modeling relationships.
