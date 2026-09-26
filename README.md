@@ -2,11 +2,21 @@
 
 This is my guided Power BI data modeling project, completed while following [Data with Baraa's *Power BI Data Modeling Portfolio Project End-to-End (Nightmare Data Model)*](https://www.youtube.com/watch?v=0A2k62YEbfI). The exercise starts with 23 messy Excel tables and focuses on turning scattered business data into a model that can support reliable analysis.
 
-The main deliverable is the data model in [`project_datamodel.pbix`](project_datamodel.pbix). The report pages are simple checks of the model, rather than a finished dashboard.
+The main deliverable is the data model in [`project_datamodel.pbix`](project_datamodel.pbix). The report pages are simple checks of the model, rather than a finished dashboard. This project helped me practice the decisions that come before visual design: understanding the source, defining business entities and events, and checking whether the resulting numbers make sense.
 
 ## The starting problem
 
-The [`dataset.xlsx`](dataset.xlsx) workbook contains 23 sheets. Customer details are spread across master, contact, address, and user tables; orders are split by year; sales lines, invoices, payments, shipments, inventory, campaigns, and targets live in separate structures. The tutorial also calls out test records, duplicate products, and confusing relationships as reasons to inspect the data before connecting tables.
+The [`dataset.xlsx`](dataset.xlsx) workbook contains 23 sheets. It resembles a raw export from several business systems, with related information split across multiple places:
+
+| Business area | Examples from the source workbook | Modeling question |
+| --- | --- | --- |
+| Customers | `CUST_MASTER`, `customer_contacts`, `Address`, `user_details` | Which attributes belong in one customer dimension, and which records should be kept? |
+| Orders and sales | `ORDERS_2025`, `ORDERS_2026`, `order_line_items` | What does one row of the sales fact represent, and how do order headers relate to lines? |
+| Products | `products`, `subcategories` | How can products be described consistently without duplicate matches? |
+| Operations | `INVOICES`, `invoice_lines`, `payments`, `shipments` | How should order, invoice, payment, and delivery events be analyzed? |
+| Marketing and planning | `CAMPAIGN_LOG`, `campaign_skus`, `sales_targets` | How can campaign activity and targets be analyzed beside sales? |
+
+The tutorial calls out test records, duplicate products, and confusing relationships as reasons to inspect the data before connecting tables. Those problems matter because a report can look correct while its totals are inflated or its filters behave unexpectedly.
 
 ## What I built
 
@@ -18,7 +28,17 @@ I organized the Power BI model around business entities and events:
 | Facts | `fact_sales`, `fact_inventory`, `fact_campaign_spend`, `fact_promotion_coverage`, `fact_order_process`, `fact_sales_targets` |
 | Supporting tables | `_measures`, `security` |
 
-The model separates descriptive tables from sales, inventory, campaign, order-process, and target data. My PBIX also contains measures named `total_sales` and `total_orders` and two report pages. The pages include date-based tables for sales, inventory units, and targets, plus cards for total sales and total orders and a customer-region table.
+The **dimensions** describe who, what, where, and when. The **facts** represent business activity or targets. Keeping those roles separate makes the model easier to read and helps avoid ambiguous paths between facts. With several fact tables, the result is closer to a fact constellation than a single small star.
+
+The PBIX also contains measures named `total_sales` and `total_orders`. Its two report pages include date-based tables for sales, inventory units, and targets, plus cards for total sales and total orders and a customer-region table. These visuals are useful for checking the model as it is built.
+
+## Project workflow
+
+1. **Explore the source.** Review the 23 sheets, identify keys and repeated fields, and ask what each row represents before creating relationships.
+2. **Organize dimensions.** Bring customer and product information into dedicated model tables, then add dimensions for geography, campaign, order flags, and dates.
+3. **Separate business events.** Model sales, inventory, campaign spend, promotion coverage, order processing, and sales targets as distinct facts. This avoids treating events with different levels of detail as one interchangeable table.
+4. **Add analytical checks.** Use a date dimension and core measures to compare values across time and keep important totals visible while refining the model.
+5. **Review access and validation.** The tutorial finishes with row-level security and a final test of the numbers and filters. My saved model includes a `security` table; the active role configuration should be checked in Power BI Desktop before claiming that RLS is implemented.
 
 ## What I learned from the project
 
@@ -29,12 +49,15 @@ The model separates descriptive tables from sales, inventory, campaign, order-pr
 - **Keep one useful source for each attribute.** Repeated IDs, hash keys, and unnecessary columns make the model harder to understand and maintain.
 - **Treat security as something to test.** The tutorial's final section shows row-level security and checks the result by viewing the report as a regional user.
 
+The biggest lesson for me is that a trustworthy Power BI report starts with a trustworthy model. Clear table roles, known fact grains, and repeated checks of key totals are more valuable than adding visuals before the data is understood.
+
 ## How to explore the files
 
 1. Open `project_datamodel.pbix` in Power BI Desktop.
 2. Use **Model view** to inspect the dimension, fact, measure, and security tables.
 3. Use **Report view** to inspect the two validation pages.
 4. If a refresh cannot find the source workbook, update the Excel source path to your local copy of `dataset.xlsx`.
+5. To review security, check **Manage roles** and **View as** in Power BI Desktop. The presence of the `security` table alone does not prove that a role is active.
 
 ## Tutorial credit
 
