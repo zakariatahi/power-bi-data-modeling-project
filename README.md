@@ -1,8 +1,8 @@
 # Power BI Data Modeling: The Nightmare Data Model
 
-This is my guided Power BI data modeling project, completed while following [Data with Baraa's *Power BI Data Modeling Portfolio Project End-to-End (Nightmare Data Model)*](https://www.youtube.com/watch?v=0A2k62YEbfI). The exercise starts with 23 messy Excel tables and focuses on turning scattered business data into a model that can support reliable analysis.
+This project turns a 23-sheet Excel dataset into a structured Power BI model for analyzing sales, inventory, campaigns, order processing, and targets. I focused on understanding the source data, separating business entities from transactions, and making the results easier to validate.
 
-The main deliverable is the data model in [`project_datamodel.pbix`](project_datamodel.pbix). The report pages are simple checks of the model, rather than a finished dashboard. This project helped me practice the decisions that come before visual design: understanding the source, defining business entities and events, and checking whether the resulting numbers make sense.
+The main deliverable is the data model in [`project_datamodel.pbix`](project_datamodel.pbix). Its two report pages check totals and filters. This project strengthened my ability to understand source data, define business entities and events, and verify that the resulting numbers make sense.
 
 ## The starting problem
 
@@ -16,7 +16,7 @@ The [`dataset.xlsx`](dataset.xlsx) workbook contains 23 sheets. It resembles a r
 | Operations | `INVOICES`, `invoice_lines`, `payments`, `shipments` | How should order, invoice, payment, and delivery events be analyzed? |
 | Marketing and planning | `CAMPAIGN_LOG`, `campaign_skus`, `sales_targets` | How can campaign activity and targets be analyzed beside sales? |
 
-The tutorial calls out test records, duplicate products, and confusing relationships as reasons to inspect the data before connecting tables. Those problems matter because a report can look correct while its totals are inflated or its filters behave unexpectedly.
+The source data includes test records and duplicate products, while its related fields are scattered across sheets. These issues matter because a report can look correct while its totals are inflated or its filters behave unexpectedly.
 
 ## What I built
 
@@ -34,20 +34,20 @@ The PBIX also contains measures named `total_sales` and `total_orders`. Its two 
 
 ## Project workflow
 
-1. **Explore the source.** Review the 23 sheets, identify keys and repeated fields, and ask what each row represents before creating relationships.
-2. **Organize dimensions.** Bring customer and product information into dedicated model tables, then add dimensions for geography, campaign, order flags, and dates.
-3. **Separate business events.** Model sales, inventory, campaign spend, promotion coverage, order processing, and sales targets as distinct facts. This avoids treating events with different levels of detail as one interchangeable table.
-4. **Add analytical checks.** Use a date dimension and core measures to compare values across time and keep important totals visible while refining the model.
-5. **Review access and validation.** The tutorial finishes with row-level security and a final test of the numbers and filters. My saved model includes a `security` table; the active role configuration should be checked in Power BI Desktop before claiming that RLS is implemented.
+1. **Explored the source.** Reviewed the 23 sheets to identify keys, repeated fields, and the meaning of each row before modeling relationships.
+2. **Organized dimensions.** Created dedicated model tables for customers, products, geography, campaigns, order flags, and dates.
+3. **Separated business events.** Represented sales, inventory, campaign spend, promotion coverage, order processing, and sales targets as distinct facts because they have different levels of detail.
+4. **Added analytical checks.** Used the date dimension, core measures, and simple report visuals to compare values across time and keep important totals visible.
+5. **Considered access and validation.** Included a `security` table in the model. The active role configuration should be checked in Power BI Desktop before claiming that row-level security is implemented.
 
 ## What I learned from the project
 
 - **Explore before modeling.** I need to understand each table's meaning and level of detail before deciding how it joins to the rest of the model.
 - **Choose the grain of each fact.** An order, an order line, an inventory record, and a campaign record describe different events. Treating them as interchangeable can duplicate values.
-- **Create shared dimensions.** Customer, product, geography, campaign, and date tables give related facts a consistent way to be filtered. The tutorial explains why directly connecting fact tables creates ambiguous results.
+- **Create shared dimensions.** Customer, product, geography, campaign, and date tables give related facts a consistent way to be filtered. Directly connecting fact tables can create ambiguous results.
 - **Validate the numbers while building.** A sales total in a simple visual provides a baseline to check after merges and relationship changes. Duplicate product matches can otherwise inflate results without being obvious.
 - **Keep one useful source for each attribute.** Repeated IDs, hash keys, and unnecessary columns make the model harder to understand and maintain.
-- **Treat security as something to test.** The tutorial's final section shows row-level security and checks the result by viewing the report as a regional user.
+- **Treat security as something to test.** A security mapping table is only part of the solution; access rules need to be verified by viewing the report as the intended user.
 
 The biggest lesson for me is that a trustworthy Power BI report starts with a trustworthy model. Clear table roles, known fact grains, and repeated checks of key totals are more valuable than adding visuals before the data is understood.
 
@@ -59,6 +59,6 @@ The biggest lesson for me is that a trustworthy Power BI report starts with a tr
 4. If a refresh cannot find the source workbook, update the Excel source path to your local copy of `dataset.xlsx`.
 5. To review security, check **Manage roles** and **View as** in Power BI Desktop. The presence of the `security` table alone does not prove that a role is active.
 
-## Tutorial credit
+## Data source credit
 
-This is practice work based on [Baraa Khatib Salkini's video](https://www.youtube.com/watch?v=0A2k62YEbfI), not an original dataset or course. The video's chapters cover [source exploration](https://www.youtube.com/watch?v=0A2k62YEbfI&t=418s), [customer and product dimensions](https://www.youtube.com/watch?v=0A2k62YEbfI&t=1149s), [fact modeling](https://www.youtube.com/watch?v=0A2k62YEbfI&t=3491s), [date table and measures](https://www.youtube.com/watch?v=0A2k62YEbfI&t=7067s), and [row-level security and final validation](https://www.youtube.com/watch?v=0A2k62YEbfI&t=8246s). The creator also explains the modeling principles in [his project write-up](https://www.blog.datawithbaraa.com/p/the-nightmare-data-model-project).
+The Nightmare Data Model dataset and project scenario were created by [Baraa Khatib Salkini (Data with Baraa)](https://www.youtube.com/watch?v=0A2k62YEbfI). This repository contains my Power BI model built from that source material.
