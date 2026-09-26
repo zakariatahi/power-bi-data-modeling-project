@@ -1,0 +1,8 @@
+# Power BI Desktop local working files
+*.pbix.tmp
+*.pbit.tmp
+*.lock
+
+# Local operating system files
+Thumbs.db
+.DS_Store
